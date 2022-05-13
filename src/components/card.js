@@ -3,30 +3,53 @@ import axios from "axios";
 class Tabs {
   constructor(obj) {
     this.headline = obj.headline;
-    this.authorName = obj.author;
+    this.authorName = obj.authorName;
     this.authorPhoto = obj.authorPhoto;
     this.tab = null;
+
   }
 
   findTab() {
-    if(this.headline.includes("Javascript")){
+    if(this.headline.includes("Javascript") || this.headline.includes("Typescript")){
       this.tab = "javascript";
+      return this;
     }
     if(this.headline.includes("Bootstrap")){
       this.tab = "bootstrap";
+      return this;
     }
     if(this.headline.includes("jQuery")){
-      this.tab = "jquery"
+      this.tab = "jquery";
+      return this;
     }
-  }
+    if(this.headline.includes("Node.js")){
+      this.tab = "node.js";
+      return this;
+    }
+
+    this.tab = "technology";
+    return this;
+  };
+
 }
 
-const newObj = new Tabs({authorName: "BONES R. LIFE",
-authorPhoto: "https://tk-assets.lambdaschool.com/a9471235-ed71-4b11-ae15-5a4fa1151d30_bones.jpg",
-headline: "MongoDB: NoSQL vs. SQL, the Debate Continues..",
-id: "04468917-d408-4e2d-804f-143474f11d29"});
+// const newObj = new Tabs({authorName: "BONES R. LIFE",
+// authorPhoto: "https://tk-assets.lambdaschool.com/a9471235-ed71-4b11-ae15-5a4fa1151d30_bones.jpg",
+// headline: "MongoDB: NoSQL vs. SQL, the Debate Continues..",
+// id: "04468917-d408-4e2d-804f-143474f11d29"});
+// // console.log(newObj.findTab())
 
-const Card = (article) => {
+// const tabs = document.querySelectorAll(".tab");
+// tabs.forEach(tab => 
+//   tab.addEventListener("click", evt => {
+//   cardAppender(".cards-container", evt.target.textContent)
+//   console.log(evt.target.textContent)
+// })
+// )
+
+// console.log(tabs)
+
+const Card = (article, topic) => {
   // TASK 5
   // ---------------------
   // Implement this function, which should return the markup you see below.
@@ -77,7 +100,7 @@ const Card = (article) => {
   return card;
 }
 
-const cardAppender = (selector) => {
+const cardAppender = (selector, topic) => {
   // TASK 6
   // ---------------------
   // Implement this function that takes a css selector as its only argument.
@@ -88,19 +111,24 @@ const cardAppender = (selector) => {
   //
 
   const cardApp = document.querySelector(selector);
+  cardApp.innerHTML = "";
 
   axios.get("http://localhost:5001/api/articles").then((res) => {
 
     Object.keys(res.data.articles).forEach(arr => {
       res.data.articles[arr].forEach(item => {
-        const authorChild = Card(item);
+        const newItem = new Tabs(item);
+        const authorChild = Card(newItem);
+        
+        if(newItem.findTab().tab !== topic && topic !== undefined){
+          authorChild.classList.toggle("hide")
+        }
         cardApp.appendChild(authorChild);
-        // console.log(item)
       })
       });
   })
   .catch((error) => {
-    console.log("There is an issue with this item.")
+    console.log("There is an issue with this item: " + error.message)
   })
 }
 
