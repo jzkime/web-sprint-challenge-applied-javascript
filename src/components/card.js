@@ -1,5 +1,31 @@
 import axios from "axios";
 
+class Tabs {
+  constructor(obj) {
+    this.headline = obj.headline;
+    this.authorName = obj.author;
+    this.authorPhoto = obj.authorPhoto;
+    this.tab = null;
+  }
+
+  findTab() {
+    if(this.headline.includes("Javascript")){
+      this.tab = "javascript";
+    }
+    if(this.headline.includes("Bootstrap")){
+      this.tab = "bootstrap";
+    }
+    if(this.headline.includes("jQuery")){
+      this.tab = "jquery"
+    }
+  }
+}
+
+const newObj = new Tabs({authorName: "BONES R. LIFE",
+authorPhoto: "https://tk-assets.lambdaschool.com/a9471235-ed71-4b11-ae15-5a4fa1151d30_bones.jpg",
+headline: "MongoDB: NoSQL vs. SQL, the Debate Continues..",
+id: "04468917-d408-4e2d-804f-143474f11d29"});
+
 const Card = (article) => {
   // TASK 5
   // ---------------------
@@ -69,6 +95,7 @@ const cardAppender = (selector) => {
       res.data.articles[arr].forEach(item => {
         const authorChild = Card(item);
         cardApp.appendChild(authorChild);
+        // console.log(item)
       })
       });
   })
